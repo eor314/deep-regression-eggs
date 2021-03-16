@@ -39,7 +39,7 @@ class PlanktonRegressionDataset(BaseDataset):
                 ff.close
             tmp = [line.strip() for line in tmp]
             self.ids = [line.split(' ')[0] for line in tmp]
-            self.pcts = [float(line.split(' ')[1]) for line in tmp]
+            self.pcts = [np.float32(line.split(' ')[1]) for line in tmp]
         
         self.images = [os.path.join(img_dir, f'{line}.jpg') for line in self.ids]
         
@@ -60,9 +60,9 @@ class PlanktonRegressionDataset(BaseDataset):
         
         label = self.pcts[ii]
         
-        sample = {"image": image, "label": label}
-        return sample
-        
+        # label is returned with a dummy dimension for the loss function
+        return image, np.array([label])
+    
     def __len__(self):
         return len(self.ids)
     
